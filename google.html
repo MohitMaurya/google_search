@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #search {
+            margin-left: 18%;
+        }
+        #bar {
+            background: #fff;
+            display: flex;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 5px 1px rgb(64 60 67 / 16%);
+            height: 39px;
+            width: 690px;
+            border-radius: 24px;
+            z-index: 3;
+            height: 44px;
+        }
+
+        #bar:hover {
+            background-color: #fff;
+            box-shadow: 0 2px 8px 1px rgb(64 60 67 / 24%);
+            border-color: rgba(223,225,229,0);
+        }
+        #bar button {
+            background-color: #fff;
+            border-color: transparent;
+        }
+        #bar span {
+            color:#1a0dab;
+        }
+
+        #searchbar {
+            width: 620px;
+            border-color: transparent;
+            height: 39px !important;
+            line-height: 39px;
+            margin-left: 17px;
+            text-rendering: auto;
+            color: -internal-light-dark(black, white);
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            display: inline-block;
+            text-align: start;
+            appearance: auto;
+            background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
+            -webkit-rtl-ordering: logical;
+            cursor: text;
+        }
+
+        #container {
+            margin-left: 20%;
+            margin-top: 25px;
+        }
+        .url {
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.3;
+            font-style: normal;
+            margin-bottom: 0px;
+        }
+        .title {
+            font-size: 20px;
+            line-height: 1.3;
+            padding-top: 5px;
+            margin-bottom: 3px;
+            font-weight: normal;
+            color: #1a0dab;
+            margin-top: 0px;
+        }
+       .title:hover {
+            text-decoration: underline;    
+        }
+        .single_div {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+
+<body>
+   <div id="search">
+       <div id="bar">
+            <input type="text" id="searchbar"/>
+            <button onclick="search()"><span class="fa fa-search"></span></button>
+        </div>
+   </div>
+   <div id="container"></div>
+</body>
+
+</html>
+<script>
+    async function search() {
+        let query = document.getElementById('searchbar').value;
+        let res = await fetch(`http://api.serpstack.com/search?access_key=4224cb833dc8168fae0b0c6f832d47bc&query=${query}`);
+        let data = await res.json();
+        showData(data);
+        
+    }
+
+    function showData(data) {
+        let container = document.getElementById('container');
+        container.innerHTML = null;
+        let {organic_results} = data;
+        organic_results.forEach((el) => {
+            appendData(el);
+        })
+    }
+
+    function appendData(el) {
+        let container = document.getElementById('container');
+
+        let url = document.createElement('p');
+        url.textContent = el.displayed_url;
+        url.setAttribute('class','url');
+        url.addEventListener('click',() => {
+            window.location.href = el.url;
+        })
+
+        let title = document.createElement('h3');
+        title.textContent = el.title;
+        title.setAttribute('class','title');
+        title.addEventListener('click',() => {
+            window.location.href = el.url;
+        })
+
+        let div = document.createElement('div');
+        div.setAttribute('class','single_div');
+
+        div.append(url,title);
+        
+
+        container.append(div);
+    }
+
+    async function defaultSearch() {
+        let res = await fetch(`http://api.serpstack.com/search?access_key=4224cb833dc8168fae0b0c6f832d47bc&query=javascript`);
+        let data = await res.json();
+        showData(data);
+        
+    }
+   defaultSearch();
+</script>

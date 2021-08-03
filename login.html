@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Signup</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #form {
+            display: flex;
+            width: 90%;
+            margin: auto;
+            height: 500px;
+            justify-content: center;
+            align-content: center;
+
+        }
+
+        #signupForm {
+            display: flex;
+            flex-direction: column;
+            border: 2px black solid;
+            width: 350px;
+            height: 400px;
+            margin-top: 70px;
+        }
+
+        #signupForm>input {
+            margin: 15px 20px 15px 20px;
+            height: 40px;
+            border: 1px black solid;
+        }
+
+        #submit {
+            background-color: black;
+            color: White;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="form">
+        <form id="signupForm" onsubmit="login(event)">
+            <input type="text" id="inp2" placeholder="Username" />
+            <input type="password" id="inp1" placeholder="Password" />
+            <input id="submit" type="submit">
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function login(e) {
+        e.preventDefault();
+        let formdata = {
+            password: document.getElementById('inp1').value,
+            username: document.getElementById('inp2').value
+        }
+
+        body = JSON.stringify(formdata);
+
+        fetch('https://masai-api-mocker.herokuapp.com/auth/login', {
+            method: 'POST',
+            body: body,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(({error}) => {
+                if (error == false) {
+                    alert("Login Successfull");
+                    window.location.href = "google.html";
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+</script>

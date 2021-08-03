@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Signup</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #form {
+            display: flex;
+            width: 90%;
+            margin: auto;
+            height: 500px;
+            justify-content: center;
+            align-content: center;
+
+        }
+
+        #signupForm {
+            display: flex;
+            flex-direction: column;
+            border: 2px black solid;
+            width: 350px;
+            height: 400px;
+            margin-top: 70px;
+        }
+
+        #signupForm>input {
+            margin: 15px 20px 15px 20px;
+            height: 40px;
+            border: 1px black solid;
+        }
+
+        #submit {
+            background-color: black;
+            color: White;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="form">
+        <form id="signupForm" onsubmit="register(event)">
+            <input type="text" id="inp1" placeholder="Name" />
+            <input type="text" id="inp2" placeholder="Email" />
+            <input type="password" id="inp3" placeholder="Password" />
+            <input type="text" id="inp4" placeholder="Username" />
+            <input type="number" id="inp5" placeholder="Mobile" />
+            <input type="text" id="inp6" placeholder="Description" />
+            <input id="submit" type="submit">
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function register(e) {
+        e.preventDefault();
+        let formdata = {
+            name: document.getElementById('inp1').value,
+            email: document.getElementById('inp2').value,
+            password: document.getElementById('inp3').value,
+            username: document.getElementById('inp4').value,
+            mobile: document.getElementById('inp5').value,
+            description: document.getElementById('inp6').value
+        }
+
+        formdata = JSON.stringify(formdata);
+        fetch('https://masai-api-mocker.herokuapp.com/auth/register', {
+            method: 'POST',
+            body: formdata,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(({error}) => {
+                if (error == false) {
+                    alert('Registration Successful');
+                    window.location.href = "login.html"
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+</script>
